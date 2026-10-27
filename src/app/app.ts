@@ -1,12 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { ConfigService } from './config.service';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.scss',
-  templateUrl: './app.html',
+  template: `<h1>Running in: {{ env }}</h1>`,
 })
 export class App {
-  protected readonly title = signal('pipeline-demo');
+  env = inject(ConfigService).value.environmentName;
 }
