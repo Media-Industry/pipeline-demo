@@ -1,0 +1,94 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]      # runs after every merge to main
+  workflow_dispatch:      # also adds a "Run workflow" button
+
+permissions:
+  id-token: write         # needed for the passwordless login (Step 4)
+  contents: read
+
+jobs:
+  # ---------- 1. BUILD ONCE ----------
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: dist/pipeline-demo/browser
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deploy-config
+          path: deploy-config
+
+  # ---------- 2. DEV (automatic) ----------
+  deploy-dev:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: app, path: app }
+      - uses: actions/download-artifact@v4
+        with: { name: deploy-config, path: cfg }
+      - run: cp cfg/dev.json app/config.json
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: pipeline-demo-dev-jnsipbeoajgxm
+          package: app
+
+  # ---------- 3. UAT (waits for approval) ----------
+  deploy-uat:
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    environment: uat
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: app, path: app }
+      - uses: actions/download-artifact@v4
+        with: { name: deploy-config, path: cfg }
+      - run: cp cfg/uat.json app/config.json
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: pipeline-demo-uat-jnsipbeoajgxm
+          package: app
+
+  # ---------- 4. PRODUCTION (waits for approval) ----------
+  deploy-prod:
+    needs: deploy-uat
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: app, path: app }
+      - uses: actions/download-artifact@v4
+        with: { name: deploy-config, path: cfg }
+      - run: cp cfg/prod.json app/config.json
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: pipeline-demo-prod-jnsipbeoajgxm
+          package: app
