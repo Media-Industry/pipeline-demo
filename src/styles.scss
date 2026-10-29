@@ -1,1 +1,64 @@
-/* You can add global styles to this file, and also import other style files */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+  color: #1f2937;
+  background: #f8fafc;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+.logo { font-weight: 700; font-size: 20px; color: #0f766e; }
+
+.hero { text-align: center; padding: 80px 24px; background: #ecfdf5; }
+.hero h1 { font-size: 40px; margin: 0 0 12px; }
+.hero p  { font-size: 18px; color: #4b5563; margin: 0 0 28px; }
+
+.btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: #0f766e;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.btn-small { padding: 8px 16px; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  max-width: 960px;
+  margin: 48px auto;
+  padding: 0 24px;
+}
+.card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; }
+.card h3 { margin: 0 0 8px; color: #0f766e; }
+.card p  { margin: 0; color: #4b5563; }
+
+.footer { text-align: center; padding: 24px; color: #6b7280; font-size: 14px; }
+
+/* Environment ribbon: Dev and UAT only */
+.ribbon {
+  position: fixed;
+  top: 16px;
+  right: -40px;
+  transform: rotate(45deg);
+  width: 160px;
+  text-align: center;
+  padding: 6px 0;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  background: #6b7280;
+}
+.ribbon.dev { background: #ea580c; }
+.ribbon.uat { background: #2563eb; }
