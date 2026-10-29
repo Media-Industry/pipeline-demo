@@ -91,4 +91,12 @@ jobs:
       - uses: azure/webapps-deploy@v3
         with:
           app-name: pipeline-demo-prod-jnsipbeoajgxm
+          slot-name: staging
           package: app
+      - name: Check staging works
+        run: |
+          host=$(az webapp show --name pipeline-demo-prod-jnsipbeoajgxm --resource-group rg-my-pipeline-demo --slot staging --query defaultHostName -o tsv)
+          sleep 30
+          curl --fail --retry 5 --retry-delay 10 "https://$host/config.json"
+      - name: Swap staging into production
+        run: az webapp deployment slot swap --name pipeline-demo-prod-jnsipbeoajgxm --resource-group rg-my-pipeline-demo --slot staging --target-slot production

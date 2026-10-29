@@ -14,7 +14,7 @@ import { ConfigService } from './config.service';
     </header>
 
     <section class="hero">
-      <h1>Protect your home in 3 minutes</h1>
+      <h1>Protect your home in 2 minutes</h1>
       <p>Simple home insurance with a clear price and no paperwork.</p>
       <a class="btn" href="#">Get a quote</a>
     </section>
