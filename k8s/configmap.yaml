@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: safehome-config
+data:
+  config.json: |
+    { "environmentName": "Kubernetes UAT", "apiUrl": "" }
