@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: safehome
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: safehome
+  template:
+    metadata:
+      labels:
+        app: safehome
+    spec:
+      containers:
+        - name: safehome
+          image: safehomeacr77612.azurecr.io/safehome:1.0
+          ports:
+            - containerPort: 80
