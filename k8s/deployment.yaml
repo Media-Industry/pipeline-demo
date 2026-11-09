@@ -14,6 +14,14 @@ spec:
     spec:
       containers:
         - name: safehome
-          image: safehomeacr77612.azurecr.io/safehome:1.0
+          image: safehomeacr77612.azurecr.io/safehome:1.1
           ports:
             - containerPort: 80
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/nginx/html/config.json
+              subPath: config.json
+      volumes:
+        - name: config
+          configMap:
+            name: safehome-config
