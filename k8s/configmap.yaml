@@ -4,4 +4,4 @@ metadata:
   name: safehome-config
 data:
   config.json: |
-    { "environmentName": "Kubernetes UAT", "apiUrl": "" }
+    { "environmentName": "Kubernetes", "apiUrl": "" }
